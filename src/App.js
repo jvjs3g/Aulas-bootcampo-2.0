@@ -1,15 +1,28 @@
-import React,{ useState }  from 'react';
+import React,{ useState, useEffect }  from 'react';
 import Header from './components/Header';
+import './App.css';
+import api from './services/api';
 
 function App(){
-  const [projects,setProjects ] = useState(['Back-End','Front-End']);
+  const [projects,setProjects ] = useState(['teste','teste']);
 
-  function handleAddProject(){
+  useEffect(() =>{
+    api.get('projects').then(response =>{
+      setProjects(response.data);
+    })
+  });
+
+  async function handleAddProject(){
    // projects.push(`novo Projeto ${Date.now()}`); *** isso nao respeita a imutabilidade
 
+   const response = await api.post('projects',{
+     title:'novo Projeto ${Date.now()}',
+     owner:'Diego fernandes'
+   });
 
-   setProjects([...projects,`novo Projeto ${Date.now()}`]);
-    console.log(projects)
+   const project = response.data;
+
+   setProjects([...projects,project]);
   }
   return (
     <>
